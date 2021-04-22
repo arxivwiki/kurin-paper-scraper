@@ -1,5 +1,5 @@
 {
-  "name": "notion-scraper",
+  "name": "kurin-notion-scraper",
   "version": "0.1.0",
   "description": "A scraper for Vitaly Kurin's paper notes",
   "main": "index.js",
