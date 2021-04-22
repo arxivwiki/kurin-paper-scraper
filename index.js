@@ -49,7 +49,7 @@ async function parse(url, stop_pt) {
                 break;
             }
         }
-        fs.appendFile('pairs.txt', aLink + ',' + l  + '\n', () => {});
+        fs.appendFile('new_pairs.txt', aLink + ',' + l  + '\n', () => {});
     }
     browser.close();
 
