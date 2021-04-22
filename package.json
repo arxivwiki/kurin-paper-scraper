@@ -1,6 +1,6 @@
 {
   "name": "kurin-paper-scraper",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A scraper for Vitaly Kurin's paper notes",
   "main": "index.js",
   "repository": {
