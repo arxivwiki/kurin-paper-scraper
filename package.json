@@ -1,11 +1,11 @@
 {
-  "name": "notion-as-a-service",
-  "version": "1.0.1",
-  "description": "A scraper that scrapes public Notion.so pages and converts them to JSON",
+  "name": "notion-scraper",
+  "version": "0.1.0",
+  "description": "A scraper for Vitaly Kurin's paper notes",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:puttputt/notion-as-a-service.git"
+    "url": "git@github.com:arxivwiki/notion-scraper.git"
   },
   "scripts": {
     "start": "node index.js",
@@ -13,10 +13,9 @@
   },
   "keywords": [
     "notion",
-    "node",
-    "json"
+    "node"
   ],
-  "author": "puttputt",
+  "author": "marwahaha",
   "license": "ISC",
   "dependencies": {
     "fs": "*",

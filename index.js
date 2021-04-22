@@ -17,26 +17,41 @@ async function getNotionPage(page, url) {
     return notionPage;
 }
 
-async function parse(url, stop_pt) {
+async function getExistingUrls() {
+    const data = await fs.promises.readFile('pairs.txt');
+    const lines = ("" + data)
+                    .split('\n')
+                    .map(x => x.split(',')[1])
+                    .filter(x => x)
+                    .map(x => x.split('https://www.notion.so')[1])
+                    .filter(x => x);
+    return lines;
+}
+
+async function parse(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
+    const existingUrls = await getExistingUrls();
 
     const notionPage = await getNotionPage(page, url);
     const links = notionPage.querySelectorAll('a');
 
     let notionLinks = [];
-    links.forEach(link => {
-        const l = link.rawAttrs.split('href="')[1].split('" ')[0];
+    for (let idx = 0; idx < links.length; idx++) {
+        let link = links[idx];
+        let l = link.rawAttrs.split('href="')[1].split('" ')[0];
         if (l.startsWith("/")) {
+            // have we reached a known url yet?
+            if (existingUrls.indexOf(l) !== -1) {
+                break;
+            }
             notionLinks.push("https://www.notion.so" + l);
         }
-    });
-
-
-    if (stop_pt !== undefined) {
-        notionLinks = notionLinks.slice(0, stop_pt)
     }
+    console.log("Number of new links: ", notionLinks.length);
 
+    notionLinks.reverse();
     for (const l of notionLinks) {
         await new Promise(resolve => setTimeout(resolve, 500 + 500*Math.random()));
         const p = await getNotionPage(page, l);
@@ -49,15 +64,10 @@ async function parse(url, stop_pt) {
                 break;
             }
         }
-        fs.appendFile('new_pairs.txt', aLink + ',' + l  + '\n', () => {});
+        fs.appendFile('pairs.txt', aLink + ',' + l  + '\n', () => {});
     }
     browser.close();
-
-    // console.log(notionLinks);
-    // console.log(arXivLinks);
-
     return;
 };
-
 
 parse(url);

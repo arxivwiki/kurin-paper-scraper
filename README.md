@@ -7,10 +7,6 @@ This builds a list of arxiv urls paired with Kurin's notes page.
 
 ## How to run
 
-The last time this was run was on 2021-04-22 (there were 61 papers). How many links have appeared since? Add this number to the last line of index.js: (if it is N, do `parse(url, N)`)
+Run `npm start` (may have to run `npm install` beforehand). The pairs should generate in pairs.txt.
 
-Then, run `npm start` (may have to run `npm install` beforehand). The pairs should generate in new_pairs.txt.
-
-Compare this list with pairs.txt, and copy it over (for now, it's manual). pairs.txt should have a list of every paper from Kurin's paper notes.
-
-Then, copy `pairs.txt` to `pairs.txt` in arxivwiki/arxivwiki. And you can run `kurin_import.py` locally. TBD: rig it up with a GitHub action.
+Copy `pairs.txt` to `pairs.txt` in arxivwiki/arxivwiki. On merge with the `main` branch a GitHub action will update the files in arxiv.wiki.
