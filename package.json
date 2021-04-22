@@ -8,6 +8,7 @@
     "url": "git@github.com:puttputt/notion-as-a-service.git"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,6 +19,7 @@
   "author": "puttputt",
   "license": "ISC",
   "dependencies": {
+    "fs": "*",
     "node-html-parser": "^1.1.15",
     "puppeteer": "^1.14.0"
   }

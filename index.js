@@ -2,58 +2,62 @@
 
 const puppeteer = require('puppeteer');
 const parser = require('node-html-parser');
+const fs = require('fs');
 
-// const url = 'https://www.notion.so/3d5d02a0e67f4a72867c20557effc7dc';
+const url = 'https://www.notion.so/Paper-Notes-by-Vitaly-Kurin-97827e14e5cd4183815cfe3a5ecf2f4c';
 
-async function parse(url) {
-    let headers = [];
-    let objects = [];
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
+async function getNotionPage(page, url) {
     await page.goto(url, { waitUntil: 'networkidle0' });
 
     const content = await page.content();
     const root = parser.parse(content);
 
     const notionPage = root.querySelector('#notion-app');
-    const table = notionPage.firstChild.firstChild.firstChild.childNodes[1].childNodes[2].firstChild.firstChild;
-    const properties = table.firstChild.firstChild;
-    const body = table.childNodes[2];
+    return notionPage;
+}
 
-    properties.childNodes.forEach(heading => {
-        headers.push(heading.text);
+async function parse(url, stop_pt) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    const notionPage = await getNotionPage(page, url);
+    const links = notionPage.querySelectorAll('a');
+
+    let notionLinks = [];
+    links.forEach(link => {
+        const l = link.rawAttrs.split('href="')[1].split('" ')[0];
+        if (l.startsWith("/")) {
+            notionLinks.push("https://www.notion.so" + l);
+        }
     });
 
-    body.childNodes.shift();
 
-    body.childNodes.forEach(row => {
-        let column = 0;
-        let object = {};
-        row.childNodes.forEach(cell => {
-            object[headers[column]] = cell.text;
+    if (stop_pt !== undefined) {
+        notionLinks = notionLinks.slice(0, stop_pt)
+    }
 
-            if (cell.text === '') {
-                if (cell.querySelector('polygon') != null) {
-                    object[headers[column]] = true;
-                } else if (cell.querySelector('path') != null) {
-                    object[headers[column]] = false;
-                } else if (cell.querySelector('img') != null) {
-                    const src = cell.querySelector('img').attributes.src.split('&width=')[0];
-
-                    object[headers[column]] = `https://www.notion.so${src}`;
-                }
+    for (const l of notionLinks) {
+        await new Promise(resolve => setTimeout(resolve, 500 + 500*Math.random()));
+        const p = await getNotionPage(page, l);
+        const spans = p.querySelectorAll('span');
+        let aLink = undefined;
+        for (let s of spans) {
+            let text = s.childNodes[0].rawText;
+            if (text.indexOf("arxiv.org") !== -1) {
+                aLink = text;
+                break;
             }
-            column++;
-        });
-        console.log(object);
-        objects.push(object);
-    });
-
+        }
+        fs.appendFile('pairs.txt', aLink + ',' + l  + '\n', () => {});
+    }
     browser.close();
 
-    return objects;
+    // console.log(notionLinks);
+    // console.log(arXivLinks);
+
+    return;
 };
 
-module.exports.parse = parse;
+
+parse(url);
