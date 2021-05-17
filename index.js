@@ -59,7 +59,7 @@ async function parse(url) {
         const spans = p.querySelectorAll('span');
         let aLink = undefined;
         for (let s of spans) {
-            let text = s.childNodes[0].rawText;
+            let text = (s.childNodes[0] || {}).rawText || "";
             if (text.indexOf("arxiv.org") !== -1) {
                 aLink = text;
                 break;
