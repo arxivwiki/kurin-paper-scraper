@@ -1,4 +1,8 @@
-# Vitaly Kurin's paper notes to arXiv.wiki
+# Note: no longer used
+
+I wanted to take arXiv.wiki in a different direction so I no longer use this importer. It still works though.
+
+Vitaly Kurin's paper notes to arXiv.wiki
 
 Links to notes are here:
 
